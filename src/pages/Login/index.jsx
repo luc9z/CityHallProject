@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import profileImg from "../../assets/pics/Login/profile-default.png";
+import profileImg from "../../assets/pics/profile-default.png";
 import styles from "./style.module.scss";
 import useBreakpoint from "../../hooks/useBreakPoint";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
@@ -143,7 +143,7 @@ export default function Login() {
             <div className={styles.initialScreen}>
               <div className={styles.fade}></div>
               <div className={styles.initialContent}>
-              <h1>Financial control you need.</h1>
+              <h1>The schedule you need.</h1>
                 <button
                   onClick={() => handlePage("register")}
                   className="title-regular"
@@ -161,7 +161,7 @@ export default function Login() {
           ) : (
             <div className={styles.initialScreen}>
               <div className={styles.initialContent}>
-                <h1>Financial control you need.</h1>
+                <h1>The schedule you need.</h1>
                 <button
                   onClick={() => handlePage("register")}
                   className="title-regular"
