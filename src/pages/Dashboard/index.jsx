@@ -32,7 +32,7 @@ const Dashboard = () => {
             </button>
           </div>
           <div className={styles.buttonContainer}>
-            <button className={styles.fullButton} onClick={() => handleNavigate("/pontos-troca")}>
+            <button className={styles.fullButton} onClick={() => handleNavigate("/pontostroca")}>
               Exchange points
             </button>
           </div>
