@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     async function loadUser() {
-      const storageUser = localStorage.getItem("projetopiII");
+      const storageUser = localStorage.getItem("cityhallproject-98bd9");
 
       if (storageUser) {
         setUser(JSON.parse(storageUser));
@@ -50,7 +50,7 @@ function AuthProvider({ children }) {
         storageUser(data);
         setLoadingAuth(false);
         toast.success("Welcome back!");
-        navigate("/");
+        navigate("/dashboard");
       })
       .catch((error) => {
         console.log(error);
@@ -85,7 +85,7 @@ function AuthProvider({ children }) {
           storageUser(data);
           setLoadingAuth(false);
           toast.success("User registrated!");
-          navigate("/");
+          navigate("/dashboard");
         });
       })
       .catch((error) => {
@@ -105,12 +105,12 @@ function AuthProvider({ children }) {
   }
 
   function storageUser(data) {
-    localStorage.setItem("CityHallProject", JSON.stringify(data));
+    localStorage.setItem("cityhallproject-98bd9", JSON.stringify(data));
   }
 
   async function logout() {
     await signOut(auth);
-    localStorage.removeItem("CityHallProject");
+    localStorage.removeItem("cityhallproject-98bd9");
     setUser(null);
     toast.warn("You are no longer authenticated!");
   }

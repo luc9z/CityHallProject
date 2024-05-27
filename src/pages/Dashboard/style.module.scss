@@ -1,53 +1,83 @@
-/* Dashboard.module.scss */
-
 .dashboard {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
   width: 100%;
 }
 
 .container {
   text-align: center;
-  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   padding: 40px;
-  width: 100%;
+  width: 90%;
 }
 
 .title {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #333;
+  color: gray;
 }
+
 .userBox {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  padding: 30px 0px;
 }
+
 .profilePhoto {
-  width: 66px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
-  border: 3px solid black;
+  border: 2px solid gray;
 }
 
 .nameWelcome {
-  font-size: 24px;
-  color: black;
+  font-size: 20px;
+  color: gray;
   margin-bottom: 0;
   margin-top: 100px;
-  padding: 0px 11px;
+}
+
+.buttonContainers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center; 
+}
+
+.fullButton {
+    border: none;
+    background-color: #1B4B66;
+    color: #fff;
+    border-radius: 8px;
+    width: 80%;
+    height: 65px;
+    margin-top: 30px;
+    transition: all 0.3s;
+    font-size: 18px;
+}
+
+
+.fullButton:hover {
+  background-color: #183e55;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
 }
 
 .subtitle {
   font-size: 1.2rem;
   margin-bottom: 30px;
-  color: #666;
+  color: gray;
 }
 
 .inputBox {
