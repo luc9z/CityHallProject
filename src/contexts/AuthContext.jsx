@@ -14,13 +14,11 @@ export const AuthContext = createContext({});
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
-
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Certifique-se de que useNavigate está sendo usado corretamente
 
   useEffect(() => {
     async function loadUser() {
-      const storageUser = localStorage.getItem("cityhallproject-98bd9");
-
+      const storageUser = localStorage.getItem('cityhallproject-98bd9');
       if (storageUser) {
         setUser(JSON.parse(storageUser));
       } else {
@@ -32,9 +30,34 @@ function AuthProvider({ children }) {
     loadUser();
   }, [navigate]);
 
-  async function signIn(email, password) {
+  const signIn = async (email, password) => {
     setLoadingAuth(true);
+    try {
+      const value = await signInWithEmailAndPassword(auth, email, password);
+      const uid = value.user.uid;
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
 
+      const data = {
+        uid,
+        firstName: docSnap.data().firstName,
+        lastName: docSnap.data().lastName,
+        email: value.user.email,
+        profilePhoto: docSnap.data().profilePhoto,
+        phone: docSnap.data().phoneNumber,
+        birthDate: docSnap.data().birthDate,
+      };
+
+      setUser(data);
+      storageUser(data);
+      setLoadingAuth(false);
+      toast.success('Welcome back!');
+      navigate('/dashboard');
+    } catch (error) {
+      console.error(error);
+      toast.error('Incorrect fields');
+      setLoadingAuth(false);
+    }
     await signInWithEmailAndPassword(auth, email, password)
       .then(async (value) => {
         let uid = value.user.uid;
@@ -115,18 +138,48 @@ function AuthProvider({ children }) {
         }
         setLoadingAuth(false);
       });
-  }
 
-  function storageUser(data) {
-    localStorage.setItem("cityhallproject-98bd9", JSON.stringify(data));
-  }
+      const data = {
+        uid,
+        firstName,
+        lastName,
+        email: value.user.email,
+        profilePhoto,
+        phoneNumber,
+        birthDate: '',
+      };
 
-  async function logout() {
+      setUser(data);
+      storageUser(data);
+      setLoadingAuth(false);
+      toast.success('User registered!');
+      navigate('/dashboard');
+    } catch (error) {
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          toast.error('Email already in use');
+          break;
+        case 'auth/invalid-email':
+          toast.error('Invalid e-mail');
+          break;
+        default:
+          toast.error('Erro ao registrar usuário');
+          break;
+      }
+      setLoadingAuth(false);
+    }
+  };
+
+  const storageUser = (data) => {
+    localStorage.setItem('cityhallproject-98bd9', JSON.stringify(data));
+  };
+
+  const logout = async () => {
     await signOut(auth);
-    localStorage.removeItem("cityhallproject-98bd9");
+    localStorage.removeItem('cityhallproject-98bd9');
     setUser(null);
-    toast.warn("You are no longer authenticated!");
-  }
+    toast.warn('You are no longer authenticated!');
+  };
 
   return (
     <AuthContext.Provider
@@ -144,6 +197,4 @@ function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export default AuthProvider;
+};
