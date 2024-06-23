@@ -1,0 +1,183 @@
+// Variáveis para cores e tipografia
+$primary-color: #007bff;
+$secondary-color: #0056b3;
+$background-color: #f8f9fa;
+$text-color: #333;
+$border-color: #ccc;
+$border-radius: 8px;
+$box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$padding: 20px;
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+  margin: 0;
+  padding: 0;
+}
+
+.pontosDeTroca {
+  text-align: center;
+  padding: $padding;
+  margin: auto;
+
+  h1 {
+    font-size: 2em;
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 1em;
+    color: $text-color;
+  }
+}
+
+.searchContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  margin-right: 10px;
+  width: 250px;
+}
+
+.searchButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  box-shadow: $box-shadow;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}
+
+.map {
+  height: 60vh;
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+}
+
+.marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border: 1px solid $border-color;
+  padding: 10px;
+  border-radius: $border-radius;
+}
+
+.markerImage {
+  max-width: 100px;
+  margin-bottom: 10px;
+}
+
+.carousel {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; // Centraliza o carrossel horizontalmente
+}
+
+.carousel .slide {
+  background: #fff;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.carouselCard {
+  text-align: center;
+  width: 200px;
+  height: 285px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: $box-shadow;
+  margin: 0 auto; // Centraliza o card dentro do carrossel
+}
+
+.carouselCard img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.itemsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.itemsList li {
+  margin-bottom: 5px;
+}
+
+.detailsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: $padding;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  background-color: #fff;
+}
+
+.detailsContent {
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+.detailsImage {
+  max-width: 400px;
+  margin-right: 20px;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+}
+
+.detailsText {
+  font-size: 16px;
+}
+
+.resetButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  box-shadow: $box-shadow;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}

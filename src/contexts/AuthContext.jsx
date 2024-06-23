@@ -1,15 +1,18 @@
 import { useState, createContext, useEffect } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebaseConnection";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 
-
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
 
   const navigate = useNavigate();
@@ -20,11 +23,14 @@ function AuthProvider({ children }) {
 
       if (storageUser) {
         setUser(JSON.parse(storageUser));
+      } else {
+        // Se não houver usuário armazenado, redirecionar para /login
+        navigate("/login");
       }
     }
 
     loadUser();
-  }, []);
+  }, [navigate]);
 
   async function signIn(email, password) {
     setLoadingAuth(true);
@@ -43,7 +49,7 @@ function AuthProvider({ children }) {
           email: value.user.email,
           profilePhoto: docSnap.data().profilePhoto,
           phone: docSnap.data().phoneNumber,
-          birthDate: docSnap.data().birthDate
+          birthDate: docSnap.data().birthDate,
         };
 
         setUser(data);
@@ -59,7 +65,14 @@ function AuthProvider({ children }) {
       });
   }
 
-  async function signUp(firstName, lastName, phoneNumber, profilePhoto, email, password) {
+  async function signUp(
+    firstName,
+    lastName,
+    phoneNumber,
+    profilePhoto,
+    email,
+    password
+  ) {
     setLoadingAuth(true);
     await createUserWithEmailAndPassword(auth, email, password)
       .then(async (value) => {
@@ -70,7 +83,7 @@ function AuthProvider({ children }) {
           phoneNumber: phoneNumber,
           profilePhoto: profilePhoto,
           email: email,
-          birthDate: ""
+          birthDate: "",
         }).then(() => {
           let data = {
             uid: uid,
@@ -79,7 +92,7 @@ function AuthProvider({ children }) {
             email: value.user.email,
             profilePhoto: profilePhoto,
             phoneNumber: phoneNumber,
-            birthDate: ""
+            birthDate: "",
           };
           setUser(data);
           storageUser(data);
@@ -125,7 +138,7 @@ function AuthProvider({ children }) {
         signUp,
         loadingAuth,
         storageUser,
-        setUser
+        setUser,
       }}
     >
       {children}
