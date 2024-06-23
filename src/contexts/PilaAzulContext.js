@@ -1,6 +1,6 @@
-// PilaAzulContext.js
+// src/contexts/PilaAzulContext.js
 
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 const PilaAzulContext = createContext();
 
@@ -28,5 +28,7 @@ export const PilaAzulProvider = ({ children }) => {
 };
 
 export const usePilaAzul = () => {
-  return React.useContext(PilaAzulContext);
+  return useContext(PilaAzulContext);
 };
+
+export default PilaAzulContext;
