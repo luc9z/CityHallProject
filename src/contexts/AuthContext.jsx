@@ -1,17 +1,14 @@
-import { useState, createContext, useEffect } from "react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { createContext, useState, useEffect } from "react";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebaseConnection";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { useContext } from 'react';
 
 export const AuthContext = createContext({});
 
-function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
   const navigate = useNavigate(); // Certifique-se de que useNavigate está sendo usado corretamente
@@ -20,10 +17,8 @@ function AuthProvider({ children }) {
     async function loadUser() {
       const storageUser = localStorage.getItem('cityhallproject-98bd9');
       if (storageUser) {
-        setUser(JSON.parse(storageUser));
-      } else {
-        // Se não houver usuário armazenado, redirecionar para /login
-        navigate("/login");
+        const loggedUser = JSON.parse(storageUser);
+        setUser(loggedUser);
       }
     }
 
@@ -38,41 +33,23 @@ function AuthProvider({ children }) {
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
 
-      const data = {
-        uid,
-        firstName: docSnap.data().firstName,
-        lastName: docSnap.data().lastName,
-        email: value.user.email,
-        profilePhoto: docSnap.data().profilePhoto,
-        phone: docSnap.data().phoneNumber,
-        birthDate: docSnap.data().birthDate,
-      };
+    try {
+      const value = await signInWithEmailAndPassword(auth, email, password);
+      let uid = value.user.uid;
 
-      setUser(data);
-      storageUser(data);
-      setLoadingAuth(false);
-      toast.success('Welcome back!');
-      navigate('/dashboard');
-    } catch (error) {
-      console.error(error);
-      toast.error('Incorrect fields');
-      setLoadingAuth(false);
-    }
-    await signInWithEmailAndPassword(auth, email, password)
-      .then(async (value) => {
-        let uid = value.user.uid;
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
 
-        const docRef = doc(db, "users", uid);
-        const docSnap = await getDoc(docRef);
-
+      if (docSnap.exists()) {
         let data = {
           uid: uid,
           firstName: docSnap.data().firstName,
           lastName: docSnap.data().lastName,
           email: value.user.email,
           profilePhoto: docSnap.data().profilePhoto,
-          phone: docSnap.data().phoneNumber,
+          phoneNumber: docSnap.data().phoneNumber,
           birthDate: docSnap.data().birthDate,
+          saldo: docSnap.data().saldo,
         };
 
         setUser(data);
@@ -80,90 +57,63 @@ function AuthProvider({ children }) {
         setLoadingAuth(false);
         toast.success("Welcome back!");
         navigate("/dashboard");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Incorrect fields");
+      } else {
+        toast.error("User not found!");
         setLoadingAuth(false);
-      });
-  }
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      toast.error("Incorrect fields");
+      setLoadingAuth(false);
+    }
+  };
 
-  async function signUp(
-    firstName,
-    lastName,
-    phoneNumber,
-    profilePhoto,
-    email,
-    password
-  ) {
+  const signUp = async (firstName, lastName, phoneNumber, profilePhoto, email, password) => {
     setLoadingAuth(true);
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then(async (value) => {
-        let uid = value.user.uid;
-        await setDoc(doc(db, "users", uid), {
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: phoneNumber,
-          profilePhoto: profilePhoto,
-          email: email,
-          birthDate: "",
-        }).then(() => {
-          let data = {
-            uid: uid,
-            firstName: firstName,
-            lastName: lastName,
-            email: value.user.email,
-            profilePhoto: profilePhoto,
-            phoneNumber: phoneNumber,
-            birthDate: "",
-          };
-          setUser(data);
-          storageUser(data);
-          setLoadingAuth(false);
-          toast.success("User registrated!");
-          navigate("/dashboard");
-        });
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            toast.error("Email already in use");
-            break;
-          case "auth/invalid-email":
-            toast.error("Invalid e-mail");
-            break;
-          default:
-            toast.error("Erro ao registrar usuário");
-            break;
-        }
-        setLoadingAuth(false);
+
+    try {
+      const value = await createUserWithEmailAndPassword(auth, email, password);
+      let uid = value.user.uid;
+
+      await setDoc(doc(db, "users", uid), {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        profilePhoto: profilePhoto,
+        email: email,
+        birthDate: "",
+        saldo: 0
       });
 
-      const data = {
-        uid,
-        firstName,
-        lastName,
+      let data = {
+        uid: uid,
+        firstName: firstName,
+        lastName: lastName,
         email: value.user.email,
-        profilePhoto,
-        phoneNumber,
-        birthDate: '',
+        profilePhoto: profilePhoto,
+        phoneNumber: phoneNumber,
+        birthDate: "",
+        saldo: 0
       };
-
       setUser(data);
       storageUser(data);
       setLoadingAuth(false);
-      toast.success('User registered!');
-      navigate('/dashboard');
+      toast.success("User registered!");
+      navigate("/dashboard");
     } catch (error) {
+      console.error("Error signing up:", error);
       switch (error.code) {
-        case 'auth/email-already-in-use':
-          toast.error('Email already in use');
+        case "auth/email-already-in-use":
+          toast.error("Email already in use");
           break;
-        case 'auth/invalid-email':
-          toast.error('Invalid e-mail');
+        case "auth/invalid-email":
+          toast.error("Invalid email");
+          break;
+        case "auth/weak-password":
+          toast.error("Weak password");
           break;
         default:
-          toast.error('Erro ao registrar usuário');
+          toast.error("Error registering user");
           break;
       }
       setLoadingAuth(false);
@@ -171,25 +121,40 @@ function AuthProvider({ children }) {
   };
 
   const storageUser = (data) => {
-    localStorage.setItem('cityhallproject-98bd9', JSON.stringify(data));
+    localStorage.setItem("cityhallproject-98bd9", JSON.stringify(data));
   };
 
   const logout = async () => {
     await signOut(auth);
     localStorage.removeItem('cityhallproject-98bd9');
     setUser(null);
-    toast.warn('You are no longer authenticated!');
+    toast.warn("You are no longer authenticated!");
+  };
+
+  const updateBalance = async (newBalance) => {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        saldo: newBalance
+      });
+  
+      const updatedUser = { ...user, saldo: newBalance };
+      setUser(updatedUser);
+      storageUser(updatedUser);
+    } catch (error) {
+      console.error("Error updating balance:", error);    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         signed: !!user,
-        user,
+        user: user || {}, // Adicionei essa linha para garantir que user não seja indefinido
         signIn,
         logout,
         signUp,
         loadingAuth,
+        updateBalance,
         storageUser,
         setUser,
       }}
@@ -198,3 +163,9 @@ function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 };
+
+// Hook personalizado para acessar o contexto de autenticação
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+}
