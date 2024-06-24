@@ -1,22 +1,20 @@
-import RoutesApp from "./routes";
+// App.js
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from '../src/contexts/AuthContext'; 
+import RoutesApp from '../src/routes/index';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import AuthProvider from "./contexts/AuthContext";
-
-import { BrowserRouter } from "react-router-dom";
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import style from './index.scss';
-
-
-function App() {
+const App = () => {
   return (
-    <BrowserRouter className="App">
-      <AuthProvider>
-          <ToastContainer autoClose={3000} />
+      <Router>
+        <AuthProvider>
           <RoutesApp />
-      </AuthProvider>
-    </BrowserRouter>
+          <ToastContainer />
+        </AuthProvider>
+      </Router>
   );
-}
+};
+
 export default App;
