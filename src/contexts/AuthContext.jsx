@@ -14,7 +14,7 @@ export const AuthContext = createContext({});
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
-  const navigate = useNavigate(); // Certifique-se de que useNavigate está sendo usado corretamente
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadUser() {
@@ -22,7 +22,6 @@ function AuthProvider({ children }) {
       if (storageUser) {
         setUser(JSON.parse(storageUser));
       } else {
-        // Se não houver usuário armazenado, redirecionar para /login
         navigate("/login");
       }
     }
@@ -58,35 +57,7 @@ function AuthProvider({ children }) {
       toast.error('Incorrect fields');
       setLoadingAuth(false);
     }
-    await signInWithEmailAndPassword(auth, email, password)
-      .then(async (value) => {
-        let uid = value.user.uid;
-
-        const docRef = doc(db, "users", uid);
-        const docSnap = await getDoc(docRef);
-
-        let data = {
-          uid: uid,
-          firstName: docSnap.data().firstName,
-          lastName: docSnap.data().lastName,
-          email: value.user.email,
-          profilePhoto: docSnap.data().profilePhoto,
-          phone: docSnap.data().phoneNumber,
-          birthDate: docSnap.data().birthDate,
-        };
-
-        setUser(data);
-        storageUser(data);
-        setLoadingAuth(false);
-        toast.success("Welcome back!");
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Incorrect fields");
-        setLoadingAuth(false);
-      });
-  }
+  };
 
   async function signUp(
     firstName,
@@ -97,46 +68,17 @@ function AuthProvider({ children }) {
     password
   ) {
     setLoadingAuth(true);
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then(async (value) => {
-        let uid = value.user.uid;
-        await setDoc(doc(db, "users", uid), {
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: phoneNumber,
-          profilePhoto: profilePhoto,
-          email: email,
-          birthDate: "",
-        }).then(() => {
-          let data = {
-            uid: uid,
-            firstName: firstName,
-            lastName: lastName,
-            email: value.user.email,
-            profilePhoto: profilePhoto,
-            phoneNumber: phoneNumber,
-            birthDate: "",
-          };
-          setUser(data);
-          storageUser(data);
-          setLoadingAuth(false);
-          toast.success("User registrated!");
-          navigate("/dashboard");
-        });
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            toast.error("Email already in use");
-            break;
-          case "auth/invalid-email":
-            toast.error("Invalid e-mail");
-            break;
-          default:
-            toast.error("Erro ao registrar usuário");
-            break;
-        }
-        setLoadingAuth(false);
+    try {
+      const value = await createUserWithEmailAndPassword(auth, email, password);
+      let uid = value.user.uid;
+
+      await setDoc(doc(db, "users", uid), {
+        firstName,
+        lastName,
+        phoneNumber,
+        profilePhoto,
+        email,
+        birthDate: "",
       });
 
       const data = {
@@ -163,7 +105,7 @@ function AuthProvider({ children }) {
           toast.error('Invalid e-mail');
           break;
         default:
-          toast.error('Erro ao registrar usuário');
+          toast.error('Error registering user');
           break;
       }
       setLoadingAuth(false);
@@ -198,3 +140,5 @@ function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;
