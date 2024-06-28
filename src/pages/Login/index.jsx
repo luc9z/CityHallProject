@@ -8,13 +8,12 @@ import { toast } from "react-toastify";
 import { storage } from "../../services/firebaseConnection";
 import { ref, uploadBytes } from "firebase/storage";
 import { AuthContext } from "../../contexts/AuthContext";
-import InputMask from 'react-input-mask';
-
+import InputMask from "react-input-mask";
 
 export default function Login() {
   const { phone, desktop } = useBreakpoint();
   const [showPassword, setShowPassword] = useState(false);
-  const [formType, setFormType] = useState(); //define se o tipo de formulário é de login ou register
+  const [formType, setFormType] = useState(); //define se o tipo de formulário é de login ou registro
   const [initial, setInitial] = useState(true);
 
   const { signIn, signUp, loadingAuth } = useContext(AuthContext);
@@ -91,22 +90,22 @@ export default function Login() {
                 });
               }
             } else {
-              toast.error("Passwords don't match!");
+              toast.error("As senhas não coincidem!");
               setConfirmPass("");
             }
           } else {
             toast.error(
-              "The password must containt 6 characters, a special character, a number and a uppercase"
+              "A senha deve conter 6 caracteres, um caractere especial, um número e uma letra maiúscula"
             );
             setPassword("");
             setConfirmPass("");
           }
         } else {
-          toast.error("Invalid phone number");
+          toast.error("Número de telefone inválido");
           setPhoneNumber("");
         }
       } else {
-        toast.error("All fields must be filled");
+        toast.error("Todos os campos devem ser preenchidos");
       }
     } else if (formType === "login") {
       if (email !== "" && password !== "") {
@@ -116,7 +115,7 @@ export default function Login() {
           // toast.error já foi chamado no AuthContext
         }
       } else {
-        toast.error("All fields must be filled");
+        toast.error("Todos os campos devem ser preenchidos");
       }
     }
   }
@@ -143,36 +142,36 @@ export default function Login() {
             <div className={styles.initialScreen}>
               <div className={styles.fade}></div>
               <div className={styles.initialContent}>
-              <h1>The schedule you need.</h1>
+                <h1>Faça a utilização do Pila Azul.</h1>
                 <button
                   onClick={() => handlePage("register")}
                   className="title-regular"
                 >
-                  Get Started
+                  Começar
                 </button>
                 <span
                   onClick={() => handlePage("login")}
                   className="title-regular text-high-emphasis"
                 >
-                  I already have an account
+                  Já tenho uma conta
                 </span>
               </div>
             </div>
           ) : (
             <div className={styles.initialScreen}>
               <div className={styles.initialContent}>
-                <h1>The schedule you need.</h1>
+                <h1>Faça a utilização do Pila Azul.</h1>
                 <button
                   onClick={() => handlePage("register")}
                   className="title-regular"
                 >
-                  Get Started
+                  Começar
                 </button>
                 <span
                   onClick={() => handlePage("login")}
                   className="title-regular text-high-emphasis"
                 >
-                  I already have an account
+                  Já tenho uma conta
                 </span>
               </div>
             </div>
@@ -183,13 +182,11 @@ export default function Login() {
           <div className={styles.container}>
             <div className={styles.title}>
               <h1 className={desktop ? "display-medium" : "display-small"}>
-                {formType === "register" ? "Welcome" : "Welcome Back"}
+                {formType === "register" ? "Bem-vindo" : "Bem-vindo de Volta"}
               </h1>
               <span className="body-medium">
-                Put your credentials to{" "}
-                {formType === "register"
-                  ? "create your account."
-                  : "login"}
+                Insira suas credenciais para{" "}
+                {formType === "register" ? "criar sua conta." : "fazer login"}
               </span>
             </div>
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -217,22 +214,22 @@ export default function Login() {
 
                   <div className={styles.inputContainer}>
                     <div className={styles.inputField}>
-                      {desktop && <label>First Name</label>}
+                      {desktop && <label>Primeiro Nome</label>}
                       <input
                         type="text"
                         className="body-medium text-primary"
-                        placeholder={`${phone ? "First Name" : ""}`}
+                        placeholder={`${phone ? "Primeiro Nome" : ""}`}
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                       />
                     </div>
 
                     <div className={styles.inputField}>
-                      {desktop && <label>Last Name</label>}
+                      {desktop && <label>Último Nome</label>}
                       <input
                         type="text"
                         className="body-medium text-primary"
-                        placeholder={`${phone ? "Last Name" : ""}`}
+                        placeholder={`${phone ? "Último Nome" : ""}`}
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                       />
@@ -254,13 +251,13 @@ export default function Login() {
 
                 {formType === "register" && (
                   <div className={styles.inputField}>
-                    {desktop && <label>Phone Number</label>}
+                    {desktop && <label>Número de Telefone</label>}
                     <InputMask
                       mask="(99) 99999-9999"
                       value={phoneNumber}
                       onChange={handlePhoneInput}
                       className="body-medium text-primary"
-                      placeholder={phoneNumber ? "Phone Number" : ""}
+                      placeholder={phoneNumber ? "Número de Telefone" : ""}
                     >
                       {(inputProps) => <input {...inputProps} type="tel" />}
                     </InputMask>
@@ -269,16 +266,20 @@ export default function Login() {
               </div>
               <div className={styles.inputContainer}>
                 <div className={styles.inputField}>
-                  {desktop && <label>Password</label>}
+                  {desktop && <label>Senha</label>}
                   <input
                     type={showPassword ? "text" : "password"}
                     className="body-medium text-primary"
-                    placeholder={`${phone ? "Password" : ""}`}
+                    placeholder={`${phone ? "Senha" : ""}`}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   {!showPassword ? (
-                    <BsEye style={{}} size={20} onClick={() => setShowPassword(true)} />
+                    <BsEye
+                      style={{}}
+                      size={20}
+                      onClick={() => setShowPassword(true)}
+                    />
                   ) : (
                     <BsEyeSlash
                       style={{}}
@@ -290,11 +291,11 @@ export default function Login() {
 
                 {formType === "register" && (
                   <div className={styles.inputField}>
-                    {desktop && <label>Confirm your Password</label>}
+                    {desktop && <label>Confirme sua Senha</label>}
                     <input
                       type={showPassword ? "text" : "password"}
                       className="body-medium text-primary"
-                      placeholder={`${phone ? "Confirm your Password" : ""}`}
+                      placeholder={`${phone ? "Confirme sua Senha" : ""}`}
                       value={confirmPass}
                       onChange={(e) => setConfirmPass(e.target.value)}
                     />
@@ -303,21 +304,23 @@ export default function Login() {
               </div>
               <button type="submit" className="display-small">
                 {loadingAuth
-                  ? "Loading..."
-                  : `${formType === "register" ? "Register" : "Login"}`}
+                  ? "Carregando..."
+                  : `${formType === "register" ? "Registrar" : "Entrar"}`}
               </button>
             </form>
           </div>
           <span className={styles.changeType}>
             {formType === "register" ? (
               <p>
-                Already have an account?{" "}
-                <span onClick={() => handlePage("login")}>Click Here</span>
+                Já tem uma conta?{" "}
+                <span onClick={() => handlePage("login")}>Clique Aqui</span>
               </p>
             ) : (
               <p>
-                Don't have an account?{" "}
-                <span onClick={() => handlePage("register")}>Register Now</span>
+                Não tem uma conta?{" "}
+                <span onClick={() => handlePage("register")}>
+                  Registre-se Agora
+                </span>
               </p>
             )}
           </span>

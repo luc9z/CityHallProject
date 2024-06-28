@@ -1,56 +1,207 @@
 .agendamento {
+  padding: 20px;
+  margin: 0 auto;
+
+  .iconContainer {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0;
-  }
-  
-  .title {
-    font-size: 2.5rem;
+    justify-content: flex-end;
     margin-bottom: 20px;
-    color: #333;
+
+    .icon {
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: #007bff;
+      }
+    }
   }
-  
+
+  .customCalendar {
+    width: 100%;
+  }
+
   .form {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    width: 90%;
+    gap: 15px;
+
+    .label {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      span {
+        font-weight: bold;
+      }
+
+      .slide {
+        position: relative;
+        text-align: center;
+      }
+    
+      .quadraSlide {
+        margin-right: 10px; /* Espaço entre os slides */
+      }
+
+      .quadras {
+        .slick-list {
+          height: 200px; /* Ajuste a altura conforme necessário */
+        }
+        
+        .quadra {
+          position: relative;
+          margin-bottom: 10px;
+          width: calc(33.33% - 10px); /* Ajuste para 3 quadras por linha */
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+
+          img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+          }
+
+          .quadraName {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+          }
+
+          .horarios {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 8px;
+            border-radius: 0 0 8px 8px;
+            text-align: center;
+          }
+
+          &.selected {
+            transform: translateY(-10px); /* Efeito visual ao selecionar */
+          }
+        }
+      }
+
+      .horarios {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center; /* Centralizando os horários */
+
+        .horario {
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &.selected {
+            background-color: #007bff;
+            color: #fff;
+          }
+        }
+      }
+
+      .button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
   }
-  
-  .label {
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #333;
+
+  .meusAgendamentos {
+    margin-top: 20px;
+
+    .agendamentoInfo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .agendamentoImage {
+      width: 150px; /* Define a largura da imagem */
+      height: 120px; /* Define a altura da imagem */
+      border-radius: 8px; /* Adiciona borda arredondada */
+      object-fit: cover; /* Garante que a imagem mantenha suas proporções */
+      margin-right: 20px; /* Espaçamento à direita da imagem */
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .agendamentosList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .agendamentoItem {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        align-items: center;
+
+        .cancelButton {
+          padding: 5px 10px;
+          border: none;
+          border-radius: 5px;
+          background-color: #ff4d4f;
+          color: #fff;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #d32f2f;
+          }
+        }
+      }
+    }
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    .modalContent {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      position: relative;
+
+      .closeButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+    }
   }
-  
-  .select, .input {
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-  
+}

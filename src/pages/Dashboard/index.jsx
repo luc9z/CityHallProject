@@ -24,17 +24,17 @@ const Dashboard = () => {
       <div className={styles.container}>
         <div className={styles.userBox}>
           <img src={user.profilePhoto} className={styles.profilePhoto} alt="" />
-          <p className={styles.nameWelcome}>Hello {user.firstName}!</p>
+          <p className={styles.nameWelcome}>Olá {user.firstName}!</p>
         </div>
-        <h1 className={styles.title}>Schedule Dashboard</h1>
-        <p className={styles.subtitle}>Select an option below:</p>
+        <h1 className={styles.title}>Painel Inicial</h1>
+        <p className={styles.subtitle}>Selecione uma opção abaixo:</p>
         <div className={styles.buttonContainers}>
           <div className={styles.buttonContainer}>
             <button
               className={styles.fullButton}
               onClick={() => handleNavigate("/agendamento")}
             >
-              Scheduling
+              Agendamento
             </button>
           </div>
           <div className={styles.buttonContainer}>
@@ -42,7 +42,7 @@ const Dashboard = () => {
               className={styles.fullButton}
               onClick={() => handleNavigate("/pontostroca")}
             >
-              Exchange points
+              Pontos de Troca
             </button>
           </div>
           <div className={styles.buttonContainer}>
@@ -50,7 +50,7 @@ const Dashboard = () => {
               className={styles.fullButton}
               onClick={() => handleNavigate("/inscricao")}
             >
-              Championship registration
+              Inscrição no Campeonato
             </button>
           </div>
         </div>
