@@ -13,18 +13,21 @@ export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loadingAuth, setLoadingAuth] = useState(false);
-  const navigate = useNavigate();
+  const [loadingAuth, setLoadingAuth] = useState(true); // Inicie com true para evitar flashes de conteúdo não autenticado
+  const navigate = useNavigate(); // Certifique-se de que useNavigate está sendo usado corretamente
 
   useEffect(() => {
-    async function loadUser() {
-      const storageUser = localStorage.getItem('cityhallproject-98bd9');
+    const loadUser = async () => {
+      const storageUser = localStorage.getItem("cityhallproject-98bd9");
       if (storageUser) {
         setUser(JSON.parse(storageUser));
+        setLoadingAuth(false);
       } else {
+        // Se não houver usuário armazenado, redirecionar para /login
         navigate("/login");
+        setLoadingAuth(false);
       }
-    }
+    };
 
     loadUser();
   }, [navigate]);
@@ -32,16 +35,20 @@ function AuthProvider({ children }) {
   const signIn = async (email, password) => {
     setLoadingAuth(true);
     try {
-      const value = await signInWithEmailAndPassword(auth, email, password);
-      const uid = value.user.uid;
-      const docRef = doc(db, 'users', uid);
+      const { user: authUser } = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const uid = authUser.uid;
+      const docRef = doc(db, "users", uid);
       const docSnap = await getDoc(docRef);
 
       const data = {
         uid,
         firstName: docSnap.data().firstName,
         lastName: docSnap.data().lastName,
-        email: value.user.email,
+        email: authUser.email,
         profilePhoto: docSnap.data().profilePhoto,
         phone: docSnap.data().phoneNumber,
         birthDate: docSnap.data().birthDate,
@@ -50,34 +57,37 @@ function AuthProvider({ children }) {
       setUser(data);
       storageUser(data);
       setLoadingAuth(false);
-      toast.success('Welcome back!');
-      navigate('/dashboard');
+      toast.success("Bem-vindo de volta!");
+      navigate("/");
     } catch (error) {
       console.error(error);
-      toast.error('Incorrect fields');
+      toast.error("Campos incorretos");
       setLoadingAuth(false);
     }
   };
 
-  async function signUp(
+  const signUp = async (
     firstName,
     lastName,
     phoneNumber,
     profilePhoto,
     email,
     password
-  ) {
+  ) => {
     setLoadingAuth(true);
     try {
-      const value = await createUserWithEmailAndPassword(auth, email, password);
-      let uid = value.user.uid;
-
+      const { user: authUser } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const uid = authUser.uid;
       await setDoc(doc(db, "users", uid), {
         firstName,
         lastName,
         phoneNumber,
         profilePhoto,
-        email,
+        email: authUser.email,
         birthDate: "",
       });
 
@@ -85,27 +95,27 @@ function AuthProvider({ children }) {
         uid,
         firstName,
         lastName,
-        email: value.user.email,
+        email: authUser.email,
         profilePhoto,
         phoneNumber,
-        birthDate: '',
+        birthDate: "",
       };
 
       setUser(data);
       storageUser(data);
       setLoadingAuth(false);
-      toast.success('User registered!');
-      navigate('/dashboard');
+      toast.success("Usuário registrado!");
+      navigate("/");
     } catch (error) {
       switch (error.code) {
-        case 'auth/email-already-in-use':
-          toast.error('Email already in use');
+        case "auth/email-already-in-use":
+          toast.error("E-mail já em uso");
           break;
-        case 'auth/invalid-email':
-          toast.error('Invalid e-mail');
+        case "auth/invalid-email":
+          toast.error("E-mail inválido");
           break;
         default:
-          toast.error('Error registering user');
+          toast.error("Erro ao registrar usuário");
           break;
       }
       setLoadingAuth(false);
@@ -113,14 +123,15 @@ function AuthProvider({ children }) {
   };
 
   const storageUser = (data) => {
-    localStorage.setItem('cityhallproject-98bd9', JSON.stringify(data));
+    localStorage.setItem("cityhallproject-98bd9", JSON.stringify(data));
   };
 
   const logout = async () => {
     await signOut(auth);
-    localStorage.removeItem('cityhallproject-98bd9');
+    localStorage.removeItem("cityhallproject-98bd9");
     setUser(null);
-    toast.warn('You are no longer authenticated!');
+    toast.warn("Você não está mais autenticado!");
+    navigate("/login"); // Redireciona para o login ao fazer logout
   };
 
   return (
@@ -136,9 +147,10 @@ function AuthProvider({ children }) {
         setUser,
       }}
     >
-      {children}
+      {!loadingAuth && children}{" "}
+      {/* Renderiza children somente quando a autenticação não estiver carregando */}
     </AuthContext.Provider>
   );
-};
+}
 
 export default AuthProvider;
