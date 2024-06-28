@@ -1,0 +1,83 @@
+.adminContainer {
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    height: 90vh;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcomeMessage {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .saldoContainer {
+    margin-bottom: 20px;
+  }
+  
+  .saldoLabel {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .saldoInput {
+    padding: 8px;
+    font-size: 1rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .selectContainer {
+    margin-bottom: 20px;
+  }
+  
+  .selectLabel {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .userSelect {
+    padding: 8px;
+    font-size: 1rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .buttonContainer {
+    margin-top: 20px;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .logoutButton {
+    margin-left: 10px;
+    background-color: #dc3545;
+  }
+  
+  .logoutButton:hover {
+    background-color: #c82333;
+  }
+  
+  .loadingMessage {
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
