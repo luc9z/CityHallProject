@@ -11,13 +11,11 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
-
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Certifique-se de que useNavigate está sendo usado corretamente
 
   useEffect(() => {
     async function loadUser() {
-      const storageUser = localStorage.getItem("cityhallproject-98bd9");
-
+      const storageUser = localStorage.getItem('cityhallproject-98bd9');
       if (storageUser) {
         const loggedUser = JSON.parse(storageUser);
         setUser(loggedUser);
@@ -25,10 +23,15 @@ export const AuthProvider = ({ children }) => {
     }
 
     loadUser();
-  }, []);
+  }, [navigate]);
 
   const signIn = async (email, password) => {
     setLoadingAuth(true);
+    try {
+      const value = await signInWithEmailAndPassword(auth, email, password);
+      const uid = value.user.uid;
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
 
     try {
       const value = await signInWithEmailAndPassword(auth, email, password);
@@ -123,7 +126,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
-    localStorage.removeItem("cityhallproject-98bd9");
+    localStorage.removeItem('cityhallproject-98bd9');
     setUser(null);
     toast.warn("You are no longer authenticated!");
   };
@@ -152,6 +155,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         loadingAuth,
         updateBalance,
+        storageUser,
         setUser,
       }}
     >
@@ -164,3 +168,4 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+}

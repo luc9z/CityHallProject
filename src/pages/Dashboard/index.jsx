@@ -17,7 +17,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className={styles.dashboard} style={{backgroundImage: `url(${backgroundImage})`}}>
+    <div
+      className={styles.dashboard}
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
       <div className={styles.container}>
         <div className={styles.userBox}>
           <img src={user.profilePhoto} className={styles.profilePhoto} alt="" />
@@ -27,19 +30,28 @@ const Dashboard = () => {
         <p className={styles.subtitle}>Select an option below:</p>
         <div className={styles.buttonContainers}>
           <div className={styles.buttonContainer}>
-            <button className={styles.fullButton} onClick={() => handleNavigate("/agendamento")}>
-            Scheduling
+            <button
+              className={styles.fullButton}
+              onClick={() => handleNavigate("/agendamento")}
+            >
+              Scheduling
             </button>
           </div>
           <div className={styles.buttonContainer}>
-            <button className={styles.fullButton} onClick={() => handleNavigate("/pontostroca")}>
+            <button
+              className={styles.fullButton}
+              onClick={() => handleNavigate("/pontostroca")}
+            >
               Exchange points
             </button>
           </div>
           <div className={styles.buttonContainer}>
-            <button className={styles.fullButton} onClick={() => handleNavigate("/inscricao")}>
-            Championship registration
-           </button>
+            <button
+              className={styles.fullButton}
+              onClick={() => handleNavigate("/inscricao")}
+            >
+              Championship registration
+            </button>
           </div>
         </div>
       </div>
